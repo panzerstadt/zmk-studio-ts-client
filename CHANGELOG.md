@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.15](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.14...v0.0.15) (2024-08-17)
+
+
+### Features
+
+* Pull in core reset_settings request/response. ([4f47937](https://github.com/zmkfirmware/zmk-studio-ts-client/commit/4f479376576364d8c0cd5847d5e090acd054f4a4))
+
 ## [0.0.14](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.13...v0.0.14) (2024-08-05)
 
 
