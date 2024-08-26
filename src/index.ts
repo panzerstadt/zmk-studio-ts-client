@@ -15,7 +15,11 @@ export interface RpcConnection {
   current_request: number;
 }
 
-export function create_rpc_connection(transport: RpcTransport): RpcConnection {
+export interface CreateRpcConnectionOpts {
+  signal?: AbortSignal;
+}
+
+export function create_rpc_connection(transport: RpcTransport, opts?: CreateRpcConnectionOpts): RpcConnection {
   let { writable: request_writable, readable: byte_readable } =
     new TransformStream<Request, Uint8Array>({
       transform(chunk, controller) {
@@ -24,18 +28,24 @@ export function create_rpc_connection(transport: RpcTransport): RpcConnection {
       },
     });
 
-  byte_readable
-    .pipeThrough(new TransformStream(get_encoder()))
-    .pipeTo(transport.writable);
+  let reqPipelineClosed = byte_readable
+    .pipeThrough(new TransformStream(get_encoder()), { signal: opts?.signal })
+    .pipeTo(transport.writable, { signal: opts?.signal });
+
+  reqPipelineClosed.catch((r) => {console.log("Closed error", r); return r}).then(async (reason: any) => {
+    await byte_readable.cancel();
+    transport.abortController.abort(reason);
+  });
 
   let response_readable = transport.readable
-    .pipeThrough(new TransformStream(get_decoder()))
+    .pipeThrough(new TransformStream(get_decoder()), { signal: opts?.signal })
     .pipeThrough(
       new TransformStream({
         transform(chunk, controller) {
           controller.enqueue(Response.decode(chunk));
         },
-      })
+      }),
+      { signal: opts?.signal }
     );
 
   let [a, b] = response_readable.tee();
@@ -47,7 +57,8 @@ export function create_rpc_connection(transport: RpcTransport): RpcConnection {
           controller.enqueue(chunk.requestResponse);
         }
       },
-    })
+    }),
+    { signal: opts?.signal }
   );
 
   let notification_readable = b.pipeThrough(
@@ -57,7 +68,8 @@ export function create_rpc_connection(transport: RpcTransport): RpcConnection {
           controller.enqueue(chunk.notification);
         }
       },
-    })
+    }),
+    { signal: opts?.signal }
   );
 
   return {

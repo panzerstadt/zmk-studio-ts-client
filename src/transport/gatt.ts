@@ -15,6 +15,8 @@ export async function connect(): Promise<RpcTransport> {
     }
   }
 
+  let abortController = new AbortController();
+
   let label = dev.name || 'Unknown';
   if (!dev.gatt.connected) {
     await dev.gatt.connect();
@@ -56,5 +58,15 @@ export async function connect(): Promise<RpcTransport> {
     },
   });
 
-  return { label, readable, writable };
+  let sig = abortController.signal;
+  let abort_cb: (this: AbortSignal, ev: Event) => any;
+  
+  abort_cb = async (ev: Event) => {
+    sig.removeEventListener("abort", abort_cb);
+    dev.gatt?.disconnect();
+  }
+
+  sig.addEventListener("abort", abort_cb);
+
+  return { label, abortController, readable, writable };
 }
