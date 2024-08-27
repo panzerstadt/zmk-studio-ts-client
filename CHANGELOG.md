@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.16](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.15...v0.0.16) (2024-08-27)
+
+
+### Features
+
+* Add support for closing/aborting transports ([61a4874](https://github.com/zmkfirmware/zmk-studio-ts-client/commit/61a4874a3b939e8cff7ed026b957fb00f76fdc8a))
+
 ## [0.0.15](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.14...v0.0.15) (2024-08-17)
 
 
