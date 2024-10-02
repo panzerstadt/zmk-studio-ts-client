@@ -1,4 +1,5 @@
 import type { RpcTransport } from './';
+import { UserCancelledError } from './errors';
 
 const SERVICE_UUID = '00000000-0196-6107-c967-c5cfb1c2482a';
 const RPC_CHRC_UUID = '00000001-0196-6107-c967-c5cfb1c2482a';
@@ -7,6 +8,12 @@ export async function connect(): Promise<RpcTransport> {
   let dev = await navigator.bluetooth.requestDevice({
     filters: [{ services: [SERVICE_UUID] }],
     optionalServices: [SERVICE_UUID],
+  }).catch((e) => {
+    if (e instanceof DOMException && e.name == "NotFoundError") {
+      throw new UserCancelledError("User cancelled the connection attempt", { cause: e});
+    } else {
+      throw e;
+    }
   });
 
   if (!dev.gatt) {

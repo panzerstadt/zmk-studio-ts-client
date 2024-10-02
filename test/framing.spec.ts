@@ -13,12 +13,12 @@ describe('framing', () => {
       );
 
       let reader = converted.getReader();
-      let chunks = [];
+      let chunks: Array<number> = [];
 
       try {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done || !value) break;
           chunks = chunks.concat(Array.from(value.values()));
         }
       } finally {
@@ -38,12 +38,12 @@ describe('framing', () => {
       );
 
       let reader = converted.getReader();
-      let chunks = [];
+      let chunks: Array<number> = [];
 
       try {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done || !value) break;
           chunks = chunks.concat(Array.from(value.values()));
         }
       } finally {
