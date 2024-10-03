@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.18](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.17...v0.0.18) (2024-10-03)
+
+
+### Features
+
+* Pull in updated studio messages ([#24](https://github.com/zmkfirmware/zmk-studio-ts-client/issues/24)) ([67856ff](https://github.com/zmkfirmware/zmk-studio-ts-client/commit/67856ff93845f08cfedadc804a230cc21f8fd2d0))
+
 ## [0.0.17](https://github.com/zmkfirmware/zmk-studio-ts-client/compare/v0.0.16...v0.0.17) (2024-10-02)
 
 
