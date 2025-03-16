@@ -1,6 +1,6 @@
 import type { RpcTransport } from './';
 
-export async function connect(options: SerialPortRequestOptions): Promise<RpcTransport> {
+export async function connect(options?: SerialPortRequestOptions): Promise<RpcTransport> {
   let abortController = new AbortController();
   let port = await navigator.serial.requestPort(options);
 
